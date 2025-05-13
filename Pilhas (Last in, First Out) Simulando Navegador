@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 5
+
+// Estrutura da pilha para armazenar URLs
+typedef struct {
+    char paginas[MAX][100];
+    int topo;
+} Pilha;
+
+// Função para inicializar a pilha
+void inicializar(Pilha *p) {
+    p->topo = -1;
+}
+
+// Função para verificar se a pilha está vazia
+int vazia(Pilha *p) {
+    return p->topo == -1;
+}
+
+// Função para verificar se a pilha está cheia
+int cheia(Pilha *p) {
+    return p->topo == MAX - 1;
+}
+
+// Função para empilhar (adicionar página)
+void empilhar(Pilha *p, char pagina[]) {
+    if (!cheia(p)) {
+        p->topo++;
+        strcpy(p->paginas[p->topo], pagina);
+    } else {
+        printf("Histórico cheio!\n");
+    }
+}
+
+// Função para desempilhar (voltar página)
+void desempilhar(Pilha *p) {
+    if (!vazia(p)) {
+        printf("Voltando da página: %s\n", p->paginas[p->topo]);
+        p->topo--;
+    } else {
+        printf("Sem páginas para voltar!\n");
+    }
+}
+
+// Função para exibir a página atual
+void paginaAtual(Pilha *p) {
+    if (!vazia(p)) {
+        printf("Página atual: %s\n", p->paginas[p->topo]);
+    } else {
+        printf("Nenhuma página carregada.\n");
+    }
+}
+
+int main() {
+    Pilha navegador;
+    inicializar(&navegador);
+    char pagina[100];
+    int escolha;
+
+    // Coletando as 5 páginas visitadas
+    printf("Digite 5 páginas visitadas:\n");
+    for (int i = 0; i < MAX; i++) {
+        printf("Página %d: ", i + 1);
+        scanf(" %99[^\n]", pagina);  // Lendo a página com espaços
+        empilhar(&navegador, pagina);
+    }
+
+    // Menu de navegação
+    do {
+        printf("\n1 - Ver página atual\n");
+        printf("2 - Voltar página\n");
+        printf("0 - Sair\n");
+        printf("Escolha: ");
+        scanf("%d", &escolha);
+
+        switch (escolha) {
+            case 1:
+                paginaAtual(&navegador);
+                break;
+            case 2:
+                desempilhar(&navegador);
+                break;
+            case 0:
+                printf("Encerrando navegador.\n");
+                break;
+            default:
+                printf("Opção inválida!\n");
+        }
+    } while (escolha != 0);
+
+    return 0;
+}
