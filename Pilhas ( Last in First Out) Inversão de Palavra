@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+// Estrutura da pilha
+typedef struct {
+    char itens[MAX];
+    int topo;
+} Pilha;
+
+// Função para inicializar a pilha
+void inicializar(Pilha *p) {
+    p->topo = -1;
+}
+
+// Função para verificar se a pilha está cheia
+int cheia(Pilha *p) {
+    return p->topo == MAX - 1;
+}
+
+// Função para verificar se a pilha está vazia
+int vazia(Pilha *p) {
+    return p->topo == -1;
+}
+
+// Função para empilhar um caractere
+void empilhar(Pilha *p, char c) {
+    if (!cheia(p)) {
+        p->itens[++(p->topo)] = c;
+    }
+}
+
+// Função para desempilhar um caractere
+char desempilhar(Pilha *p) {
+    if (!vazia(p)) {
+        return p->itens[(p->topo)--];
+    }
+    return '\0';  // Retorna caractere nulo se vazia
+}
+
+int main() {
+    Pilha pilha;
+    char palavra[MAX];
+
+    // Inicializando a pilha
+    inicializar(&pilha);
+
+    // Lendo a palavra do usuário
+    printf("Digite uma palavra: ");
+    scanf("%s", palavra);
+
+    // Empilhando cada caractere da palavra
+    for (int i = 0; i < strlen(palavra); i++) {
+        empilhar(&pilha, palavra[i]);
+    }
+
+    // Desempilhando e imprimindo a palavra invertida
+    printf("Palavra invertida: ");
+    while (!vazia(&pilha)) {
+        printf("%c", desempilhar(&pilha));
+    }
+    printf("\n");
+
+    return 0;
+}
