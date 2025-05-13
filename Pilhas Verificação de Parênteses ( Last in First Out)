@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+// Estrutura da pilha
+typedef struct {
+    char itens[MAX];
+    int topo;
+} Pilha;
+
+// Função para inicializar a pilha
+void inicializar(Pilha *p) {
+    p->topo = -1;
+}
+
+// Função para verificar se a pilha está vazia
+int vazia(Pilha *p) {
+    return p->topo == -1;
+}
+
+// Função para verificar se a pilha está cheia
+int cheia(Pilha *p) {
+    return p->topo == MAX - 1;
+}
+
+// Função para empilhar um caractere
+void empilhar(Pilha *p, char c) {
+    if (!cheia(p)) {
+        p->itens[++(p->topo)] = c;
+    }
+}
+
+// Função para desempilhar um caractere
+char desempilhar(Pilha *p) {
+    if (!vazia(p)) {
+        return p->itens[(p->topo)--];
+    }
+    return '\0';  // Retorna caractere nulo se estiver vazia
+}
+
+// Função para verificar se os parênteses estão balanceados
+int verificarParenteses(char expressao[]) {
+    Pilha pilha;
+    inicializar(&pilha);
+
+    for (int i = 0; i < strlen(expressao); i++) {
+        if (expressao[i] == '(') {
+            empilhar(&pilha, '(');  // Abre parêntese, empilha
+        } else if (expressao[i] == ')') {
+            if (vazia(&pilha)) {    // Fecha parêntese sem abrir
+                return 0;
+            }
+            desempilhar(&pilha);   // Fecha parêntese, desempilha
+        }
+    }
+
+    // Se a pilha estiver vazia no final, está balanceado
+    return vazia(&pilha);
+}
+
+int main() {
+    char expressao[MAX];
+
+    // Entrada da expressão
+    printf("Digite uma expressão matemática: ");
+    fgets(expressao, MAX, stdin);
+    expressao[strcspn(expressao, "\n")] = '\0';  // Remover o '\n'
+
+    // Verificação e resultado
+    if (verificarParenteses(expressao)) {
+        printf("Os parênteses estão corretamente balanceados.\n");
+    } else {
+        printf("Os parênteses NÃO estão balanceados.\n");
+    }
+
+    return 0;
+}
