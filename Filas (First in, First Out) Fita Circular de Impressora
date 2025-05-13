@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <string.h>
+
+#define TAM 4
+
+// Estrutura da fila circular
+typedef struct {
+    char documentos[TAM][100];
+    int frente;
+    int traseira;
+    int contador;
+} FilaCircular;
+
+// Inicializa a fila
+void inicializar(FilaCircular *fila) {
+    fila->frente = 0;
+    fila->traseira = -1;
+    fila->contador = 0;
+}
+
+// Verifica se a fila está cheia
+int cheia(FilaCircular *fila) {
+    return fila->contador == TAM;
+}
+
+// Verifica se a fila está vazia
+int vazia(FilaCircular *fila) {
+    return fila->contador == 0;
+}
+
+// Adiciona um documento na fila
+void adicionar(FilaCircular *fila, char doc[]) {
+    if (!cheia(fila)) {
+        fila->traseira = (fila->traseira + 1) % TAM;
+        strcpy(fila->documentos[fila->traseira], doc);
+        fila->contador++;
+    } else {
+        printf("Fita cheia! Não é possível adicionar: %s\n", doc);
+    }
+}
+
+// Remove e imprime um documento da fila
+void imprimir(FilaCircular *fila) {
+    if (!vazia(fila)) {
+        printf("Imprimindo: %s\n", fila->documentos[fila->frente]);
+        fila->frente = (fila->frente + 1) % TAM;
+        fila->contador--;
+    } else {
+        printf("Fita vazia! Nenhum documento para imprimir.\n");
+    }
+}
+
+int main() {
+    FilaCircular impressora;
+    inicializar(&impressora);
+    char documento[100];
+
+    // Adicionando os primeiros 4 documentos
+    printf("Adicionando 4 documentos iniciais na fita:\n");
+    for (int i = 1; i <= TAM; i++) {
+        sprintf(documento, "Documento_%d", i); // Gerando nome do documento
+        adicionar(&impressora, documento);
+        printf("Adicionado: %s\n", documento);
+    }
+
+    int interacoes;
+    printf("\nDigite o número de interações (impressões): ");
+    scanf("%d", &interacoes);
+
+    // Ciclo de impressão e adição
+    for (int i = 1; i <= interacoes; i++) {
+        // Imprime o primeiro documento da fila
+        imprimir(&impressora);
+
+        // Adiciona um novo documento ao final
+        sprintf(documento, "Novo_Doc_%d", i + TAM);
+        adicionar(&impressora, documento);
+        printf("Adicionado: %s\n", documento);
+
+        printf("\n");
+    }
+
+    return 0;
+}
